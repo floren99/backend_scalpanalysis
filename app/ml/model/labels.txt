@@ -1,0 +1,12 @@
+alopecia
+folliculitis
+headLice
+ketombe
+lichenPlanus
+malePatternBaldness
+normal
+psoriasis
+seborrheicDermatitis
+skinInflammation
+telogenEffluvium
+tineaCapitis
