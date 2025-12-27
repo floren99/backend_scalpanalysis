@@ -10,5 +10,19 @@ engine = create_engine(
     if DATABASE_URL.startswith("sqlite") else {}
 )
 
-SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+SessionLocal = sessionmaker(
+    bind=engine,
+    autoflush=False,
+    autocommit=False
+)
+
 Base = declarative_base()
+
+
+# ✅ INI YANG KAMU KURANG
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
