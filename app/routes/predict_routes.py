@@ -1,17 +1,10 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.ml.hair_classification import predict
-from app.database import SessionLocal
+from app.database import get_db
 from app import models
 
 router = APIRouter(prefix="/predict", tags=["Predict"])
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @router.post("/")
 async def analyze(

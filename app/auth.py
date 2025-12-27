@@ -4,17 +4,18 @@ from jose import jwt
 import os
 
 SECRET_KEY = os.getenv("SECRET_KEY", "dev_secret")
-ALGORITHM = "HS256"
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
 
-pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def hash_password(pw: str):
-    return pwd.hash(pw)
+def hash_password(password: str):
+    return pwd_context.hash(password)
 
-def verify_password(pw, hashed):
-    return pwd.verify(pw, hashed)
+def verify_password(password, hashed_password):
+    return pwd_context.verify(password, hashed_password)
 
 def create_token(data: dict):
-    payload = data.copy()
-    payload["exp"] = datetime.utcnow() + timedelta(hours=12)
-    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    expire = datetime.utcnow() + timedelta(hours=12)
+    data = data.copy()
+    data.update({"exp": expire})
+    return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)

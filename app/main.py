@@ -1,5 +1,7 @@
 from fastapi import FastAPI
-from app.routes import predict_routes
+from app.routes import predict_routes, auth_routes
+from app.database import Base, engine
+from app import models
 
 app = FastAPI(title="Scalp Analysis API")
 
@@ -10,5 +12,8 @@ def root():
         "message": "Backend running",
         "docs": "/docs"
     }
+Base.metadata.create_all(bind=engine)
 
+app.include_router(auth_routes.router)
+app.include_router(predict_routes.router)
 app.include_router(predict_routes.router)
