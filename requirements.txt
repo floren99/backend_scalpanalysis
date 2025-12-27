@@ -1,4 +1,4 @@
-# backend
+# backend 
 fastapi==0.115.6
 uvicorn==0.30.6
 sqlalchemy>=1.4,<2.1
@@ -7,9 +7,14 @@ python-multipart==0.0.9
 python-dotenv==1.0.1
 python-jose==3.3.0
 email-validator
+passlib[bcrypt]      # ← TAMBAHAN WAJIB
 
 # image & ML
 tensorflow==2.19.0
 numpy>=1.26,<2.0
 opencv-python-headless==4.10.0.84
 pillow==10.4.0
+
+# optional but safe
+scipy<1.13
+scikit-learn
