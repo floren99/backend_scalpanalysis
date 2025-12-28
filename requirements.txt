@@ -7,7 +7,9 @@ python-multipart==0.0.9
 python-dotenv==1.0.1
 python-jose==3.3.0
 email-validator
-passlib[bcrypt]      # ← TAMBAHAN WAJIB
+passlib[bcrypt]==1.7.4
+bcrypt==4.1.2
+
 
 # image & ML
 tensorflow==2.19.0
