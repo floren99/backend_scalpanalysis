@@ -52,97 +52,115 @@ def predict(image_bytes):
 #  BUSINESS LOGIC 
 DISEASE_INFO = {
     "alopecia": {
-        "display_name": "Alopecia Areata",
+        "display_name": "Alopecia",
         "recommendation": [
-            "Hindari stres berlebih karena dapat memicu kerontokan",
-            "Gunakan perawatan rambut yang lembut",
-            "Konsultasikan ke dokter spesialis kulit atau rambut"
+            "Gunakan obat oles seperti minoxidil & kortikosteroid, obat minum seperti finasteride & JAK inhibitor (misal baricitinib).",
+            "Imunoterapi (misal DPCP), fototerapi, Terapi PRP (Platelet-Rich Plasma) di perlukan jika obat oles dan minum tidak berhasil mengatasi permasalahan.",
+            "Lakukan transplantasi rambut (jika kebotakan parah).",
+            "Catatan: Alopecia merupakan penyakit yang cukup krusial sehingga agar lebih detail anda disarankan untuk tetap melakukan konsultasikan ke dokter spesialis rambut."
         ]
     },
     "folliculitis": {
         "display_name": "Folliculitis",
         "recommendation": [
-            "Jaga kebersihan kulit kepala",
-            "Hindari menggaruk area yang terinfeksi",
-            "Gunakan obat topikal sesuai anjuran dokter"
+            "Jaga kebersihan kulit kepala.",
+            "Hindari menggaruk area yang terinfeksi.",
+            "Gunakan Pembersih antibakteri (benzoyl peroxide atau chlorhexidine).",
+            "Antibiotik topikal atau oral diperlukan jika keadaan semakin parah.",
+            "Kompres hangat kulit kepala dapat membantu untuk mengurangi nyeri dan bengkak."
+            "Catatan: Jika dalam 1 minggu tidak ada perubahan Anda perlu berkonsultasi kedokter spesialis masalah kulit atau rambut."
         ]
     },
     "headLice": {
         "display_name": "Head Lice (Kutu Rambut)",
         "recommendation": [
-            "Gunakan sampo atau obat pembasmi kutu",
-            "Cuci sprei, sisir, dan handuk dengan air panas",
-            "Periksa dan obati anggota keluarga lain"
+        "Gunakan sampo atau obat pembasmi kutu yang mengandung permethrin, pyrethrin, atau dimethicone dan dapat dibeli di apotek terdekat. Ikuti petunjuk penggunaan yang tertera pada kemasan.",
+        "Selama 3 hari berturut-turut, Anda wajib keramas menggunakan sampo anti kutu. Jangan menggunakan sampo biasa selama 2 hari pertama masa pengobatan."
+        "Gunakan sisir serit untuk mengangkat telur (nits)."
+        "Cuci sprei, sisir, dan handuk dengan air panas.",
+        "Periksa dan obati anggota keluarga lain."
         ]
     },
     "ketombe": {
         "display_name": "Ketombe",
         "recommendation": [
-            "Gunakan sampo anti-ketombe",
-            "Keramas secara teratur",
-            "Hindari penggunaan produk rambut berlebihan"
+            "Gunakan sampo anti-ketombe yang mengandung zinc pyrithione, selenium sulfide, atau ketoconazole.",
+            "Keramas secara teratur, 2-3 kali seminggu.",
+            "Hindari stress berlebihan.",
+            "Hindari penggunaan produk rambut berlebihan.",
+            "Hindari makanan yang berminyak."
         ]
     },
     "lichenPlanus": {
         "display_name": "Lichen Planus",
         "recommendation": [
-            "Hindari pemicu iritasi pada kulit kepala",
-            "Gunakan obat sesuai resep dokter",
-            "Lakukan pemeriksaan rutin ke dermatologis"
+            "Lakukan pengobatan menggunakan krim obat oles yang mengandung kortikosteroid, yang diaplikasikan langsung pada kulit kepala ",
+            "Jika kortikosteroid tidak mempan, dapat digunakan salep (tretinoin) atau tablet (isotretinoin, acitretin)."
+            "Jika rasa gatak berlebih, gunakan obat yang mengandung Antihistamin"
+            " Jika obat-obatan dirasa kurang membantu dalam 7 hari segera konsultasi ke dokter rambut atau kulit untuk melakukan Fototerapi (Terapi Sinar UV) "
         ]
     },
     "malePatternBaldness": {
         "display_name": "Male Pattern Baldness (Kebotakan Pola Pria)",
         "recommendation": [
-            "Gunakan perawatan rambut sesuai anjuran medis",
+            "Gunakan perawatan rambut yang mengandung Minoxidil (2 persen atau 5%)untuk membantu merangsang pertumbuhan rambut.",
+            "Minum obat yang mengandung Finasteride untuk membantu mengurangi kerontokan rambut."
             "Jaga pola makan dan gaya hidup sehat",
-            "Konsultasikan pilihan terapi ke dokter"
+            "Jika dalam 1 bulan tidak ada pertumbuhan sedikitpun dan kebotakan semakin parah Konsultasikan terapi PRP atau transplantasi rambut ke dokter"
         ]
     },
     "normal": {
         "display_name": "Kulit Kepala Normal",
         "recommendation": [
-            "Pertahankan kebersihan rambut dan kulit kepala",
-            "Gunakan produk perawatan sesuai kebutuhan",
-            "Hindari bahan kimia keras"
+            "Pertahankan kebersihan rambut dan kulit kepala.",
+            "Gunakan produk perawatan sesuai kebutuhan.",
+            "Hindari bahan kimia keras."
         ]
     },
     "psoriasis": {
         "display_name": "Psoriasis Kulit Kepala",
         "recommendation": [
-            "Gunakan obat topikal sesuai anjuran dokter",
-            "Hindari stres dan iritasi",
-            "Lakukan kontrol rutin ke dokter kulit"
+            "Gunakan Sampo yang bahan dasarnya tar batubara atau asam salisilat.",
+            "Hindari stres dan menggaruk kulit kepala.",
+            "Gunakanbat sistemik untuk kasus berat (misal: methotrexate, biologics)."
+            "Lakukan kontrol ke dokter jika kondisi semakin buruk."
         ]
     },
     "seborrheicDermatitis": {
         "display_name": "Seborrheic Dermatitis",
         "recommendation": [
-            "Gunakan sampo khusus dermatitis seboroik",
-            "Kelola stres dengan baik",
-            "Jaga kebersihan kulit kepala"
+            "Gunakan sampo  anti jamur (ketoconazole, selenium sulfide).",
+            "Krim kortikosteroid ringan.",
+            "Kelola stres dengan baik.",
+            "Jaga kebersihan kulit kepala."
         ]
     },
     "skinInflammation": {
         "display_name": "Skin Inflammation (Peradangan Kulit Kepala)",
         "recommendation": [
-            "Hindari produk yang dapat menyebabkan iritasi",
-            "Gunakan sampo ringan",
-            "Konsultasi ke dokter bila berlanjut"
+            "Hindari produk yang dapat menyebabkan iritasi.",
+            "Gunakan Krim atau salep antiinflamasi (kortikosteroid topikal).",
+            "Gunakan Obat antihistamin jika ada reaksi alergi.",
+            "Hindari pemicu iritasi (pewarna rambut, sampo keras).",
+            "Hindari menggaruk kulit kepala.",
+            "Konsultasi ke dokter bila masalah kuliit kepala berlanjut lebih dari 3 minggu"
         ]
     },
     "telogenEffluvium": {
         "display_name": "Telogen Effluvium",
         "recommendation": [
             "Kelola stres dan istirahat cukup",
+            "Konsumsi Suplemen multivitamin (biotin, zinc, vitamin D). ",
             "Perbaiki asupan nutrisi",
-            "Konsultasikan ke dokter"
+            "Jika rontok berlebihan silahkan menggunakan Minoxidil topikal dan berkonsultasi ke dokter spesialis kulit dan rambut"
+           
         ]
     },
     "tineaCapitis": {
         "display_name": "Tinea Capitis",
         "recommendation": [
-            "Gunakan obat antijamur sesuai resep",
+            "Gunakan obat antijamur dengan obat oral yang menggandung griseofulvin, terbinafine",
+            "Pakai sampo anti jamur (ketoconazole) untuk mencegah penularan.",
             "Jaga kebersihan kulit kepala",
             "Hindari berbagi alat rambut"
         ]
