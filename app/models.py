@@ -14,6 +14,7 @@ class User(Base):
     hashed_password = Column(String)
 
     histories = relationship("History", back_populates="user")
+    reset_codes = relationship("PasswordReset", back_populates="user")
 
 
 class History(Base):
@@ -26,3 +27,14 @@ class History(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="histories")
+
+
+class PasswordReset(Base):
+    __tablename__ = "password_resets"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    code = Column(String, index=True)
+    expired_at = Column(DateTime)
+
+    user = relationship("User", back_populates="reset_codes")
