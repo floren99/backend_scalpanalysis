@@ -44,7 +44,7 @@ def predict(image_bytes):
     idx = int(np.argmax(probs))
     confidence = float(probs[idx])
 
-    if confidence < 0.90:
+    if confidence < 0.80:
         raise ValueError("Gambar bukan citra kulit kepala yang valid")
 
     return labels[idx], confidence
