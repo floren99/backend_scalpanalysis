@@ -28,6 +28,11 @@ class ForgotPasswordRequest(BaseModel):
     email: EmailStr
 
 
+class VerifyResetCodeRequest(BaseModel):
+    email: EmailStr
+    code: str
+
+
 class ResetPasswordRequest(BaseModel):
     email: EmailStr
     code: str
@@ -89,6 +94,10 @@ def forgot_password(data: ForgotPasswordRequest, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(status_code=404, detail="Email tidak terdaftar")
 
+    db.query(PasswordReset).filter(
+        PasswordReset.user_id == user.id
+    ).delete()
+
     code = generate_reset_code()
     expired = datetime.utcnow() + timedelta(minutes=10)
 
@@ -101,9 +110,30 @@ def forgot_password(data: ForgotPasswordRequest, db: Session = Depends(get_db)):
     db.add(reset)
     db.commit()
 
-    send_reset_email(user.email, code)
+    try:
+        send_reset_email(user.email, code)
+    except Exception:
+        pass
 
-    return {"message": "Kode reset dikirim ke email"}
+    return {"message": "Kode reset dikirim"}
+
+
+@router.post("/verify-reset-code")
+def verify_reset_code(data: VerifyResetCodeRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == data.email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Email tidak terdaftar")
+
+    reset = db.query(PasswordReset).filter(
+        PasswordReset.user_id == user.id,
+        PasswordReset.code == data.code,
+        PasswordReset.expired_at > datetime.utcnow()
+    ).first()
+
+    if not reset:
+        raise HTTPException(status_code=400, detail="Kode tidak valid atau kadaluarsa")
+
+    return {"message": "Kode valid"}
 
 
 @router.post("/reset-password")
@@ -114,15 +144,11 @@ def reset_password(data: ResetPasswordRequest, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(status_code=404, detail="User tidak ditemukan")
 
-    reset = (
-        db.query(PasswordReset)
-        .filter(
-            PasswordReset.user_id == user.id,
-            PasswordReset.code == data.code,
-            PasswordReset.expired_at > datetime.utcnow()
-        )
-        .first()
-    )
+    reset = db.query(PasswordReset).filter(
+        PasswordReset.user_id == user.id,
+        PasswordReset.code == data.code,
+        PasswordReset.expired_at > datetime.utcnow()
+    ).first()
 
     if not reset:
         raise HTTPException(status_code=400, detail="Kode tidak valid atau kadaluarsa")
