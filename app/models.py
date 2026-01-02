@@ -24,6 +24,7 @@ class History(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     disease = Column(String)
     confidence = Column(Float)
+    image_path = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="histories")
