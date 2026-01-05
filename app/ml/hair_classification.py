@@ -24,6 +24,19 @@ def preprocess(image_bytes):
     if img.width < 200 or img.height < 200:
         raise ValueError("Gambar terlalu kecil atau tidak jelas")
 
+    img_np = np.array(img)
+
+    gray = np.mean(img_np, axis=2)
+
+    brightness = np.mean(gray)
+    contrast = np.std(gray)
+
+    if brightness < 30:
+        raise ValueError("Gambar terlalu gelap dan tidak terdeteksi sebagai kulit kepala")
+
+    if contrast < 15:
+        raise ValueError("Gambar terlalu polos dan bukan citra kulit kepala")
+
     img = img.resize((224, 224))
     arr = np.array(img).astype(np.float32)
 

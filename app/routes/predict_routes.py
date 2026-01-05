@@ -57,6 +57,11 @@ async def analyze(
             db.add(history)
             db.commit()
 
+        healthy_map = {
+            "male": "/static/healthy/male.png",
+            "female": "/static/healthy/female.jpg"
+        }
+
         disease_info = get_disease_info(label)
 
         warning = None
@@ -75,6 +80,7 @@ async def analyze(
             "display_name": disease_info["display_name"],
             "confidence": round(confidence * 100, 2),
             "user_image": image_url,
+            "healthy_reference": healthy_map.get(gender),
             "recommendations": disease_info["recommendation"],
             "is_confident": status == "high",
             "warning": warning,
