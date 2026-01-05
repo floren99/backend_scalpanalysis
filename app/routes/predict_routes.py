@@ -10,7 +10,6 @@ from app import models
 
 router = APIRouter(prefix="/predict", tags=["Predict"])
 
-
 UPLOAD_DIR = "static/uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
@@ -31,27 +30,22 @@ async def analyze(
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
             status_code=400,
-            detail="Format gambar tidak didukung (jpg, jpeg, png, heic)"
+            detail="Format gambar tidak didukung"
         )
 
     try:
- 
         img_bytes = await file.read()
         if not img_bytes:
             raise ValueError("File gambar kosong")
 
-
-        label, confidence = predict(img_bytes)
-
+        label, confidence, status = predict(img_bytes)
 
         filename = f"{uuid.uuid4()}.{ext}"
         file_path = os.path.join(UPLOAD_DIR, filename)
-
         with open(file_path, "wb") as f:
             f.write(img_bytes)
 
         image_url = f"/static/uploads/{filename}"
-
 
         if user_id:
             history = models.History(
@@ -63,26 +57,28 @@ async def analyze(
             db.add(history)
             db.commit()
 
+        disease_info = get_disease_info(label)
 
-        healthy_map = {
-            "male": "/static/healthy/male.png",
-            "female": "/static/healthy/female.jpg"
-        }
+        warning = None
+        tips = None
 
+        if status == "low":
+            warning = "Prediksi kurang yakin, disarankan konsultasi dokter."
+            tips = [
+                "Pastikan gambar fokus pada kulit kepala",
+                "Hindari gambar buram atau terlalu gelap",
+                "Pastikan tidak terhalang rambut atau aksesori"
+            ]
 
-        disease_info = get_disease_info(label) or {
-            "display_name": label,
-            "recommendation": []
-        }
-
-        # RESPONSE
         return {
             "disease": label,
             "display_name": disease_info["display_name"],
             "confidence": round(confidence * 100, 2),
             "user_image": image_url,
-            "healthy_reference": healthy_map.get(gender),
-            "recommendations": disease_info["recommendation"]
+            "recommendations": disease_info["recommendation"],
+            "is_confident": status == "high",
+            "warning": warning,
+            "tips": tips
         }
 
     except ValueError as e:

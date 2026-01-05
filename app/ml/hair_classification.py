@@ -44,10 +44,11 @@ def predict(image_bytes):
     idx = int(np.argmax(probs))
     confidence = float(probs[idx])
 
-    if confidence < 0.80:
+    if confidence < 0.40:
         raise ValueError("Gambar bukan citra kulit kepala yang valid")
 
-    return labels[idx], confidence
+    status = "high" if confidence >= 0.80 else "low"
+    return labels[idx], confidence, status
 
 #  BUSINESS LOGIC 
 DISEASE_INFO = {
