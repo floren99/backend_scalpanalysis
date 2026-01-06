@@ -28,10 +28,7 @@ async def analyze(
 
     ext = file.filename.lower().split(".")[-1]
     if ext not in ALLOWED_EXTENSIONS:
-        raise HTTPException(
-            status_code=400,
-            detail="Format gambar tidak didukung"
-        )
+        raise HTTPException(status_code=400, detail="Format gambar tidak didukung")
 
     try:
         img_bytes = await file.read()
