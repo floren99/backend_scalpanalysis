@@ -3,8 +3,6 @@ import numpy as np
 import tensorflow as tf
 from PIL import Image, UnidentifiedImageError
 
-
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = os.path.join(BASE_DIR, "model")
 
@@ -23,7 +21,7 @@ def preprocess(image_bytes):
     except UnidentifiedImageError:
         raise ValueError("File bukan gambar valid")
 
-    if img.width < 180 or img.height < 180:
+    if img.width < 200 or img.height < 200:
         raise ValueError("Gambar terlalu kecil atau tidak jelas")
 
     img_np = np.array(img)
@@ -33,15 +31,11 @@ def preprocess(image_bytes):
     brightness = np.mean(gray)
     contrast = np.std(gray)
 
-    if brightness < 25 or brightness > 250:
-        raise ValueError("Gambar terlalu gelap atau terlalu terang sehingga tidak terdeteksi sebagai kulit kepala")
+    if brightness < 30:
+        raise ValueError("Gambar terlalu gelap dan tidak terdeteksi sebagai kulit kepala")
 
-    if contrast < 10:
+    if contrast < 15:
         raise ValueError("Gambar terlalu polos dan bukan citra kulit kepala")
-
-    color_std = np.mean(np.std(img_np, axis=(0, 1)))
-    if color_std < 12:
-        raise ValueError("Variasi warna tidak sesuai karakteristik kulit kepala")
 
     img = img.resize((224, 224))
     arr = np.array(img).astype(np.float32)
@@ -53,7 +47,6 @@ def preprocess(image_bytes):
 
     arr = np.expand_dims(arr, axis=0)
     return arr.astype(input_details[0]["dtype"])
-
 
 def predict(image_bytes):
     x = preprocess(image_bytes)
@@ -164,7 +157,7 @@ DISEASE_INFO = {
             "Gunakan Obat antihistamin jika ada reaksi alergi.",
             "Hindari pemicu iritasi (pewarna rambut, sampo keras).",
             "Hindari menggaruk kulit kepala.",
-            "Konsultasi ke dokter bila masalah kulit kepala berlanjut lebih dari 3 minggu"
+            "Konsultasi ke dokter bila masalah kuliit kepala berlanjut lebih dari 3 minggu"
         ]
     },
     "telogenEffluvium": {
@@ -196,3 +189,4 @@ def get_disease_info(label: str):
             "Disarankan konsultasi tenaga medis"
         ]
     })
+

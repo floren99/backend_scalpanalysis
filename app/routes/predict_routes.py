@@ -23,14 +23,14 @@ async def analyze(
     db: Session = Depends(get_db),
 ):
 
-    if not file.filename:
-        raise ValueError("File tidak valid")
-
-    ext = file.filename.lower().split(".")[-1]
-    if ext not in ALLOWED_EXTENSIONS:
-        raise ValueError("Format gambar tidak didukung")
-
     try:
+        if not file.filename:
+            raise ValueError("File tidak valid")
+
+        ext = file.filename.lower().split(".")[-1]
+        if ext not in ALLOWED_EXTENSIONS:
+            raise ValueError("Format gambar tidak didukung")
+
         img_bytes = await file.read()
         if not img_bytes:
             raise ValueError("File gambar kosong")
