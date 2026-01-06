@@ -30,7 +30,12 @@ def preprocess(image_bytes):
 
     brightness = np.mean(gray)
     contrast = np.std(gray)
+    color_std = np.std(img_np, axis=(0, 1))  # per channel
+    mean_color_std = np.mean(color_std)
 
+    if mean_color_std < 10:
+        raise ValueError("Gambar bukan citra kulit kepala yang valid")
+   
     if brightness < 30:
         raise ValueError("Gambar terlalu gelap dan tidak terdeteksi sebagai kulit kepala")
 
