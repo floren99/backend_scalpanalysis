@@ -32,15 +32,39 @@ def preprocess(image_bytes):
     contrast = np.std(gray)
     color_std = np.std(img_np, axis=(0, 1))  # per channel
     mean_color_std = np.mean(color_std)
+    gx = np.abs(np.diff(gray, axis=1))
+    gy = np.abs(np.diff(gray, axis=0))
+    edge_strength = np.mean(gx) + np.mean(gy)
 
-    if mean_color_std < 10:
+
+    if mean_color_std < 15:
         raise ValueError("Gambar bukan citra kulit kepala yang valid")
    
-    if brightness < 30:
+    if brightness < 40:
         raise ValueError("Gambar terlalu gelap dan tidak terdeteksi sebagai kulit kepala")
 
-    if contrast < 15:
+    if contrast < 18:
         raise ValueError("Gambar terlalu polos dan bukan citra kulit kepala")
+
+    if edge_strength < 12:
+        raise ValueError("Gambar Tidak ditemukan tekstur rambut")
+    
+    laplacian = np.var(np.diff(gray, 2))
+    if laplacian < 15:
+        raise ValueError("Gambar terlalu halus / blur")
+    
+    r = img_np[:,:,0]
+    g = img_np[:,:,1]
+    b = img_np[:,:,2]
+
+    skin_mask = (r > 95) & (g > 40) & (b > 20) & \
+                ((np.max(img_np,axis=2)-np.min(img_np,axis=2)) > 15) & \
+                (np.abs(r-g) > 15) & (r > g) & (r > b)
+
+    skin_ratio = np.sum(skin_mask) / skin_mask.size
+
+    if skin_ratio < 0.10:
+        raise ValueError("Gambar tidak terdeteksi warna kulit kepala")
 
     img = img.resize((224, 224))
     arr = np.array(img).astype(np.float32)
